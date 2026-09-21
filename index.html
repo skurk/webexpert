@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebExpert | EXPERT Remote Console</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">WebExpert</span>
+            <span class="brand-sub">Expert Power Amplifier Remote Console</span>
+        </div>
+        <div class="connection">
+            <span id="bar-operate" class="pill pill-off">STANDBY</span>
+            <span id="bar-tx" class="pill pill-off">RX</span>
+            <span id="bar-alarm" class="pill pill-off">ALARM</span>
+            <span id="link-state" class="pill pill-off">Disconnected</span>
+            <button id="btn-connect" type="button" class="primary">Connect</button>
+            <button id="btn-disconnect" type="button" disabled>Disconnect</button>
+        </div>
+    </header>
+
+    <p id="unsupported" class="banner banner-error" hidden>
+        This browser does not expose the Web Serial API. Use a Chromium-based browser
+        (Chrome, Edge, Opera) over <code>https://</code> or <code>http://localhost</code>.
+    </p>
+    <p id="error-banner" class="banner banner-error" hidden></p>
+
+    <nav class="tabs" role="tablist" aria-label="Console sections">
+        <button id="tab-state" type="button" role="tab" aria-controls="panel-state" aria-selected="true">Amplifier state</button>
+        <button id="tab-meters" type="button" role="tab" aria-controls="panel-meters" aria-selected="false" tabindex="-1">Measurements</button>
+        <button id="tab-keys" type="button" role="tab" aria-controls="panel-keys" aria-selected="false" tabindex="-1">Front panel</button>
+        <button id="tab-setup" type="button" role="tab" aria-controls="panel-setup" aria-selected="false" tabindex="-1">Setup menus</button>
+        <button id="tab-control" type="button" role="tab" aria-controls="panel-control" aria-selected="false" tabindex="-1">Link control</button>
+        <button id="tab-alarms" type="button" role="tab" aria-controls="panel-alarms" aria-selected="false" tabindex="-1">Alarm history</button>
+        <button id="tab-log" type="button" role="tab" aria-controls="panel-log" aria-selected="false" tabindex="-1">Traffic log</button>
+    </nav>
+
+    <main class="layout">
+        <section id="panel-state" class="card card-state" role="tabpanel" aria-labelledby="tab-state" tabindex="0">
+            <h2>Amplifier state</h2>
+            <div class="state-grid">
+                <span id="st-operate" class="pill pill-off">STANDBY</span>
+                <span id="st-tx" class="pill pill-off">RX</span>
+                <span id="st-tune" class="pill pill-off">TUNE</span>
+                <span id="st-alarm" class="pill pill-off">ALARM</span>
+                <span id="st-mode" class="pill pill-off">HALF</span>
+                <span id="st-contest" class="pill pill-off">CONTEST</span>
+                <span id="st-beep" class="pill pill-off">BEEP</span>
+            </div>
+            <dl class="info-grid">
+                <div><dt>Display context</dt><dd id="st-display">&mdash;</dd></div>
+                <div><dt>Input</dt><dd id="st-input">&mdash;</dd></div>
+                <div><dt>Band / sub-band</dt><dd id="st-band">&mdash;</dd></div>
+                <div><dt>Frequency</dt><dd id="st-freq">&mdash;</dd></div>
+                <div><dt>Antenna</dt><dd id="st-antenna">&mdash;</dd></div>
+                <div><dt>CAT interface</dt><dd id="st-cat">&mdash;</dd></div>
+                <div><dt>Start-up mode</dt><dd id="st-startup">&mdash;</dd></div>
+                <div><dt>Firmware</dt><dd id="st-firmware">&mdash;</dd></div>
+            </dl>
+        </section>
+
+        <section id="panel-meters" class="card card-meters" role="tabpanel" aria-labelledby="tab-meters" tabindex="0" hidden>
+            <h2>Measurements</h2>
+            <div class="meters">
+                <div class="meter">
+                    <div class="meter-head"><span>Output power</span><b id="m-pa-value">&mdash;</b></div>
+                    <div class="meter-track"><i id="m-pa-bar" class="meter-fill"></i></div>
+                    <div class="meter-scale" id="m-pa-scale">0 &ndash; 200 Wpep</div>
+                </div>
+                <div class="meter">
+                    <div class="meter-head"><span>Reverse power</span><b id="m-pr-value">&mdash;</b></div>
+                    <div class="meter-track"><i id="m-pr-bar" class="meter-fill warn"></i></div>
+                    <div class="meter-scale">0 &ndash; 200 Wpep</div>
+                </div>
+                <div class="meter">
+                    <div class="meter-head"><span id="m-swr-label">SWR</span><b id="m-swr-value">&mdash;</b></div>
+                    <div class="meter-track"><i id="m-swr-bar" class="meter-fill"></i></div>
+                    <div class="meter-scale" id="m-swr-scale">1.0 &ndash; 3.0</div>
+                </div>
+                <div class="meter">
+                    <div class="meter-head"><span>Supply voltage</span><b id="m-va-value">&mdash;</b></div>
+                    <div class="meter-track"><i id="m-va-bar" class="meter-fill"></i></div>
+                    <div class="meter-scale">0 &ndash; 60 V</div>
+                </div>
+                <div class="meter">
+                    <div class="meter-head"><span>Supply current</span><b id="m-ia-value">&mdash;</b></div>
+                    <div class="meter-track"><i id="m-ia-bar" class="meter-fill"></i></div>
+                    <div class="meter-scale">0 &ndash; 50 A</div>
+                </div>
+                <div class="meter">
+                    <div class="meter-head"><span>Heatsink</span><b id="m-temp-value">&mdash;</b></div>
+                    <div class="meter-track"><i id="m-temp-bar" class="meter-fill"></i></div>
+                    <div class="meter-scale" id="m-temp-scale">0 &ndash; 90 &deg;C</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="panel-keys" class="card card-keys" role="tabpanel" aria-labelledby="tab-keys" tabindex="0" hidden>
+            <h2>Front panel</h2>
+            <div class="keypads">
+                <div class="keypad">
+                    <h3>Tuner</h3>
+                    <button type="button" data-key="L_DOWN">L &minus;</button>
+                    <button type="button" data-key="L_UP">L +</button>
+                    <button type="button" data-key="C_DOWN">C &minus;</button>
+                    <button type="button" data-key="C_UP">C +</button>
+                    <button type="button" data-key="TUNE" class="accent">TUNE</button>
+                </div>
+                <div class="keypad">
+                    <h3>Navigation</h3>
+                    <button type="button" data-key="IN">IN</button>
+                    <button type="button" data-key="BAND_DOWN">BAND &minus;</button>
+                    <button type="button" data-key="BAND_UP">BAND +</button>
+                    <button type="button" data-key="ANT">ANT</button>
+                    <button type="button" data-key="CAT">CAT</button>
+                    <button type="button" data-key="LEFT">&larr;</button>
+                    <button type="button" data-key="RIGHT">&rarr;</button>
+                    <button type="button" data-key="SET">SET</button>
+                </div>
+                <div class="keypad">
+                    <h3>Operation</h3>
+                    <button type="button" data-key="OPERATE" class="accent">OPERATE</button>
+                    <button type="button" data-key="MODE">MODE</button>
+                    <button type="button" data-key="DISPLAY">DISPLAY</button>
+                    <button type="button" data-key="OFF" class="danger">OFF</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="panel-setup" class="card card-setup" role="tabpanel" aria-labelledby="tab-setup" tabindex="0" hidden>
+            <h2>Setup menus</h2>
+            <div class="keypad keypad-setup">
+                <button type="button" data-key="SET">SET</button>
+                <button type="button" data-key="LEFT">&larr;</button>
+                <button type="button" data-key="RIGHT">&rarr;</button>
+                <button type="button" data-key="IN">IN</button>
+                <button type="button" data-key="ANT">ANT</button>
+                <button type="button" data-key="CAT">CAT</button>
+                <button type="button" data-key="BAND_DOWN">BAND &minus;</button>
+                <button type="button" data-key="BAND_UP">BAND +</button>
+            </div>
+            <div id="setup-view" class="setup-view">
+                <p class="hint">No setup screen is open. Press <b>SET</b> to enter the SETUP OPTIONS menu.</p>
+            </div>
+            <div id="setup-stored" class="setup-stored"></div>
+            <p class="hint">
+                The protocol exposes keystrokes only, so setup values are changed by navigating
+                the amplifier menus with the keys above. The current screen is decoded live.
+            </p>
+        </section>
+
+        <section id="panel-control" class="card card-control" role="tabpanel" aria-labelledby="tab-control" tabindex="0" hidden>
+            <h2>Link control</h2>
+            <div class="control-row">
+                <label class="switch">
+                    <input id="chk-auto-read" type="checkbox" checked>
+                    <span>Read settings after connecting</span>
+                </label>
+                <button id="btn-read-settings" type="button">Read settings now</button>
+                <span id="read-note" class="note" role="status"></span>
+            </div>
+            <div class="control-row">
+                <label class="switch">
+                    <input id="chk-rcu" type="checkbox">
+                    <span>Remote Console Update (streaming)</span>
+                </label>
+            </div>
+            <div class="control-row">
+                <label for="poll-rate">Poll rate when RCU is off</label>
+                <select id="poll-rate">
+                    <option value="0">Off (manual)</option>
+                    <option value="2">2 / s</option>
+                    <option value="5" selected>5 / s</option>
+                    <option value="8">8 / s (maximum)</option>
+                </select>
+                <button id="btn-poll-once" type="button">Request status</button>
+            </div>
+            <div class="control-row">
+                <span>DTR power line</span>
+                <button id="btn-power-on" type="button">Power ON</button>
+                <button id="btn-power-off" type="button">Power OFF</button>
+            </div>
+            <div class="control-row">
+                <label for="cat-freq">CAT via RS-232</label>
+                <input id="cat-freq" type="number" min="0" max="55000" step="1" placeholder="kHz">
+                <button id="btn-cat-send" type="button">Send frequency</button>
+            </div>
+            <p class="hint">
+                Requires the amplifier CAT interface to be set to RS-232. Keep the request
+                rate at or below 8 per second.
+            </p>
+        </section>
+
+        <section id="panel-alarms" class="card card-alarms" role="tabpanel" aria-labelledby="tab-alarms" tabindex="0" hidden>
+            <h2>Alarm history</h2>
+            <ol id="alarm-list" class="alarm-list">
+                <li class="empty">No alarm report received. Open ALARM HISTORY on the amplifier.</li>
+            </ol>
+        </section>
+
+        <section id="panel-log" class="card card-log" role="tabpanel" aria-labelledby="tab-log" tabindex="0" hidden>
+            <h2>
+                Traffic log
+                <label class="switch inline">
+                    <input id="chk-log-status" type="checkbox">
+                    <span>include STATUS frames</span>
+                </label>
+                <button id="btn-log-clear" type="button" class="ghost">Clear</button>
+            </h2>
+            <pre id="log" class="log" aria-live="polite"></pre>
+        </section>
+    </main>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
