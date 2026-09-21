@@ -482,3 +482,8 @@ code {
     border-radius: 0.25rem;
 }
 
+.header-link {
+    color: var(--color-muted);
+    text-decoration: underline;
+}
+
