@@ -19,6 +19,10 @@ The goal is to provide an alternative to the official application from Expert, w
 - A modern browser with WebSerial support (Chrome, Brave, Edge, Opera, and similar)
 - An Expert PA connected to the same computer
 
+## License
+
+This project is released under the GNU General Public License v3.0, see the included LICENSE file for details.
+
 ## AI usage
 
 AI was used to assist the protocol implementation, as well as creating the basic framework.
