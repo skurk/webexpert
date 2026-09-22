@@ -15,6 +15,7 @@ Work in progress. Master branch may or may not be working at all.
 ## Features
 
 - WebSerial communication with the amplifier
+- Baud rate selector for maximum compatibility (1k-FA is usually 9.6kbps, others up to 115.2kbps)
 - Automatically read the amplifier state and settings
 - Tabbed console with the amplifier state, measurements, front panel, setup menus, link control, alarm history and traffic log.
 
