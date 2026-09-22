@@ -8,6 +8,10 @@ The goal is to provide an alternative to the official application from Expert, w
 
 ![Screenshot](https://github.com/skurk/webexpert/blob/main/screenshot.png?raw=true)
 
+## Status
+
+Work in progress. Master branch may or may not be working at all.
+
 ## Features
 
 - WebSerial communication with the amplifier
