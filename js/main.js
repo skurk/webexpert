@@ -29,6 +29,7 @@ const statusWaiters = new Set();
 const ui = {
     connect: document.getElementById("btn-connect"),
     disconnect: document.getElementById("btn-disconnect"),
+    baud: document.getElementById("sel-baud"),
     unsupported: document.getElementById("unsupported"),
     autoRead: document.getElementById("chk-auto-read"),
     readSettings: document.getElementById("btn-read-settings"),
@@ -59,6 +60,7 @@ function setControlsEnabled(enabled) {
     }
     ui.connect.disabled = enabled;
     ui.disconnect.disabled = !enabled;
+    ui.baud.disabled = enabled;
 }
 
 async function send(packet) {
@@ -186,8 +188,8 @@ async function readSettings() {
     }
 }
 
-link.addEventListener("open", () => {
-    setLinkState("Connected", true);
+link.addEventListener("open", (event) => {
+    setLinkState(`Connected ${event.detail.baudRate} bps`, true);
     setControlsEnabled(true);
     restartPolling();
     if (ui.autoRead.checked) {
@@ -231,7 +233,7 @@ link.addEventListener("packet", (event) => {
 ui.connect.addEventListener("click", async () => {
     try {
         showError("");
-        await link.connect();
+        await link.connect({ baudRate: Number(ui.baud.value) });
     } catch (error) {
         if (error.name !== "NotFoundError") {
             showError(`Connection failed: ${error.message}`);
@@ -338,5 +340,6 @@ if (!isSupported()) {
 }
 setControlsEnabled(false);
 ui.connect.disabled = !isSupported();
+ui.baud.disabled = !isSupported();
 resetStatus();
 

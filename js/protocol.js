@@ -1,7 +1,12 @@
 // EXPERT 1K-FA serial protocol (Communication Protocol Specifications Rev. 2.0).
 
+/** Link speeds offered at connect time; 1K-FA uses 9600, 2K-FA uses 115200. */
+export const LINK_BAUD_RATES = Object.freeze([9600, 19200, 38400, 57600, 115200]);
+
+export const DEFAULT_BAUD_RATE = 9600;
+
 export const SERIAL_OPTIONS = Object.freeze({
-    baudRate: 9600,
+    baudRate: DEFAULT_BAUD_RATE,
     dataBits: 8,
     stopBits: 1,
     parity: "none",

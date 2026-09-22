@@ -1,6 +1,6 @@
 // Web Serial transport for the EXPERT amplifier link.
 
-import { PacketParser, SERIAL_OPTIONS } from "./protocol.js";
+import { DEFAULT_BAUD_RATE, PacketParser, SERIAL_OPTIONS } from "./protocol.js";
 
 export function isSupported() {
     return typeof navigator !== "undefined" && "serial" in navigator;
@@ -22,7 +22,7 @@ export class AmplifierLink extends EventTarget {
         this.dispatchEvent(new CustomEvent(type, { detail }));
     }
 
-    async connect({ requestNewPort = true } = {}) {
+    async connect({ requestNewPort = true, baudRate = DEFAULT_BAUD_RATE } = {}) {
         if (!isSupported()) {
             throw new Error("Web Serial is not available in this browser.");
         }
@@ -39,13 +39,13 @@ export class AmplifierLink extends EventTarget {
             port = await navigator.serial.requestPort();
         }
 
-        await port.open(SERIAL_OPTIONS);
+        await port.open({ ...SERIAL_OPTIONS, baudRate });
         this.#port = port;
         this.#closing = false;
         this.#parser.reset();
         this.#writer = port.writable.getWriter();
         this.#readLoop = this.#read();
-        this.#emit("open", { info: port.getInfo?.() ?? {} });
+        this.#emit("open", { info: port.getInfo?.() ?? {}, baudRate });
     }
 
     async #read() {

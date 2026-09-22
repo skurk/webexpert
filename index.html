@@ -13,8 +13,9 @@
     <header class="topbar">
         <div class="brand">
             <span class="brand-mark">WebExpert</span>
-            <span class="brand-sub">Expert Power Amplifier Remote Console
-            (<a class="header-link" href="https://github.com/skurk/webexpert">GitHub</a>)
+            <span class="brand-sub">
+                Expert Power Amplifier Remote Console |
+                <a class="header-link" title="Link to GitHub repository"href="https://github.com/skurk/webexpert">GitHub</a>
             </span>
         </div>
         <div class="connection">
@@ -22,6 +23,16 @@
             <span id="bar-tx" class="pill pill-off">RX</span>
             <span id="bar-alarm" class="pill pill-off">ALARM</span>
             <span id="link-state" class="pill pill-off">Disconnected</span>
+            <label class="baud-select" for="sel-baud">
+                <span>Baud</span>
+                <select id="sel-baud">
+                    <option value="9600" selected>9600</option>
+                    <option value="19200">19200</option>
+                    <option value="38400">38400</option>
+                    <option value="57600">57600</option>
+                    <option value="115200">115200</option>
+                </select>
+            </label>
             <button id="btn-connect" type="button" class="primary">Connect</button>
             <button id="btn-disconnect" type="button" disabled>Disconnect</button>
         </div>
@@ -218,9 +229,14 @@
             <pre id="log" class="log" aria-live="polite"></pre>
         </section>
     </main>
-	<footer>
-		<a href="https://github.com/skurk/webexpert/">GitHub repo</a>
-	</footer>
+
+    <footer class="site-footer">
+        <p>
+            Protocol: EXPERT Communication Protocol Specifications Rev. 2.0 &mdash;
+            8N1, no parity. Default baud rate is 9600 for the 1K-FA, 115200 baud on other models.
+        </p>
+    </footer>
+
     <script type="module" src="js/main.js"></script>
 </body>
 
