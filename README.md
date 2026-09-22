@@ -6,7 +6,7 @@ The goal is to provide an alternative to the official application from Expert, w
 
 ## Screenshot
 
-![Screenshot](https://github.com/skurk/webexpert/blob/main/screenshot.png?raw=true)
+![WebExpertScreenshot](https://raw.githubusercontent.com/skurk/webexpert/main/screenshot.png)
 
 ## Status
 
